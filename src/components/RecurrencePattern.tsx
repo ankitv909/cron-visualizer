@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { clampDayOfMonth, formatOrdinal, formatTime } from '../lib/recurrence';
 
 type Pattern = 'Daily' | 'Weekly' | 'Monthly';
 
@@ -25,13 +26,9 @@ const RecurrencePattern: React.FC = () => {
             return `Runs every week on ${selected} at ${formatTime(time)}.`;
         }
         if (pattern === 'Monthly') {
-            return `Runs every month on the ${date}th day at ${formatTime(time)}.`;
+            const day = Number.parseInt(date, 10) || 1;
+            return `Runs every month on the ${formatOrdinal(day)} day at ${formatTime(time)}.`;
         }
-    };
-
-    const formatTime = (time: string) => {
-        const [hour, minute] = time.split(':');
-        return `${hour.padStart(2, '0')}:${minute}`;
     };
 
     return (
@@ -109,6 +106,7 @@ const RecurrencePattern: React.FC = () => {
                                 max="31"
                                 value={date}
                                 onChange={e => setDate(e.target.value)}
+                                onBlur={e => setDate(clampDayOfMonth(e.target.value))}
                                 className="w-full p-2 border rounded"
                             />
                         </div>
