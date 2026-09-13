@@ -1,54 +1,90 @@
-# React + TypeScript + Vite
+# Cron Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small React + TypeScript utility for understanding cron-style schedules and building human-readable recurrence patterns.
 
-Currently, two official plugins are available:
+The project contains two focused tools:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Cron Expression Visualizer** — parses a six-field expression into Seconds, Minutes, Hours, Days, Month, and Day of Week fields.
+2. **Recurrence Pattern Generator** — builds daily, weekly, or monthly schedules and turns the selected options into a readable sentence.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Six-field cron expression input
+- Validation for the expected number of cron fields
+- Parsed field breakdown with active values highlighted
+- Daily recurrence with selectable time
+- Weekly recurrence with selectable weekdays and time
+- Monthly recurrence with day-of-month and time
+- Human-readable schedule descriptions
+- Responsive React UI styled with Tailwind CSS
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Tech Stack
+
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- ESLint
+
+## Project Structure
+
+```text
+src/
+  components/
+    CronVisualizer.tsx      # Parses and displays six-field cron expressions
+    RecurrencePattern.tsx   # Daily/weekly/monthly recurrence builder
+  App.tsx
+  main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Install
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+### Run locally
+
+```bash
+npm run dev
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## How It Works
+
+### Cron Visualizer
+
+Enter a six-field expression such as:
+
+```text
+0 5 2 4 6 7
+```
+
+The UI maps each value to its corresponding schedule field. Inputs with a different number of fields display a validation message instead of producing a misleading interpretation.
+
+### Recurrence Generator
+
+Choose a recurrence type:
+
+- **Daily** — select a time.
+- **Weekly** — select one or more weekdays plus a time.
+- **Monthly** — select a day of the month plus a time.
+
+The selected values are converted into a readable description so the schedule is easy to verify before using it elsewhere.
+
+## Notes
+
+This project is intentionally focused on visualization and recurrence-form UX. It does not execute scheduled jobs or act as a full cron parser/runtime.
