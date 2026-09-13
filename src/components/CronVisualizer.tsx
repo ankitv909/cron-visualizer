@@ -1,32 +1,22 @@
 import React, { useState } from 'react';
-
-const FIELD_LABELS = ['Seconds', 'Minutes', 'Hours', 'Days', 'Month', 'Day of Week'];
+import {
+    CRON_FIELD_LABELS,
+    EMPTY_CRON_FIELDS,
+    parseCronExpression,
+} from '../lib/cron';
 
 const CronVisualizer: React.FC = () => {
     const [expression, setExpression] = useState('');
-    const [fields, setFields] = useState<string[]>(['*', '*', '*', '*', '*', '*']);
+    const [fields, setFields] = useState<string[]>([...EMPTY_CRON_FIELDS]);
     const [error, setError] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let input = e.target.value.trim();
+        const parsed = parseCronExpression(e.target.value);
 
-        if (/^\d{6}$/.test(input)) {
-            input = input.split('').join(' ');
-        }
-
-        setExpression(input);
-        const cleaned = input.replace(/\s+/g, ' ');
-        const parts = cleaned.split(' ');
-
-        if (parts.length === 6) {
-            setFields(parts);
-            setError('');
-        } else {
-            setFields(['*', '*', '*', '*', '*', '*']);
-            setError('Cron expression must have exactly 6 fields.');
-        }
+        setExpression(parsed.expression);
+        setFields(parsed.fields);
+        setError(parsed.error);
     };
-
 
     return (
         <div className="w-full max-w-3xl mx-auto my-8 text-center">
@@ -36,21 +26,28 @@ const CronVisualizer: React.FC = () => {
                 <h2 className="text-xl font-semibold mb-4 text-center">Part 1: Cron Expression Evaluator</h2>
 
                 <div className="flex justify-between items-center mb-8 px-4">
-                    <label className="text-lg font-semibold">Cron Expression</label>
+                    <label className="text-lg font-semibold" htmlFor="cron-expression">Cron Expression</label>
                     <input
+                        id="cron-expression"
                         type="text"
                         value={expression}
                         onChange={handleInputChange}
-                        placeholder="e.g., 0 5 2 4 6 7"
+                        placeholder="e.g., 0 */5 9-17 * * 1-5"
+                        aria-invalid={Boolean(error)}
+                        aria-describedby={error ? 'cron-error' : undefined}
                         className="border p-2 rounded w-64 text-center"
                     />
                 </div>
-                {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+                {error && (
+                    <p id="cron-error" role="alert" className="text-red-500 text-sm mb-4 text-center">
+                        {error}
+                    </p>
+                )}
                 <div className="mt-6">
                     <h3 className="font-bold mb-2 text-center">Parsed Fields</h3>
                     <ul className="space-y-2 text-left">
-                        {FIELD_LABELS.map((label, index) => (
-                            <li key={index}>
+                        {CRON_FIELD_LABELS.map((label, index) => (
+                            <li key={label}>
                                 <strong>{label}:</strong>{' '}
                                 {fields[index] !== '*' ? `${fields[index]} (active)` : '*'}
                             </li>
