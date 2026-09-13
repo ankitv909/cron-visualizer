@@ -25,7 +25,7 @@ function isSupportedField(value: string): boolean {
  * Parse the six-field cron format used by the visualizer.
  *
  * Besides plain values and wildcards, the parser accepts common list, range,
- * and step forms such as `1,15,30`, `1-5`, `*/10`, and `1-5/2`.
+ * and step forms such as `1,15,30`, `1-5`, wildcard step syntax, and `1-5/2`.
  */
 export function parseCronExpression(rawValue: string): CronParseResult {
   let expression = rawValue.trim();
